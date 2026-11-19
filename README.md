@@ -185,6 +185,7 @@ const FOOTER_CONFIG = {
 .
 ├── openlist-password-popup.html   # 密码弹窗代码（粘贴到自定义头部）
 ├── openlist-custom-footer.html    # 底部备案代码（粘贴到自定义头部）
+├── openlist-anti-debug.html       # 禁用 F12 / 快捷键 / 禁用右键菜单（粘贴到自定义头部）
 ├── openlist-click-effect.html     # 页面点击特效（粘贴到自定义头部）
 ├── assets/
 │   ├── 密码.jpg                    # 密码弹窗预览图
