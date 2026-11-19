@@ -1,0 +1,98 @@
+<!--
+  OpenList / AList 防调试脚本
+
+  功能：
+  1. 禁用 F12 / Ctrl+Shift+I/J/C/U 等快捷键
+  2. 禁用右键菜单
+  3. 检测到开发者工具后清空页面
+
+  使用方式：
+  把下面全部代码粘贴到 OpenList 后台「设置 → 全局 → 自定义头部」
+-->
+<script>
+  (function() {
+    let triggered = false;
+
+    // ===== 1. 禁用快捷键 =====
+    document.addEventListener('keydown', function(e) {
+      const key = e.key || e.keyCode;
+
+      // F12
+      if (key === 'F12' || key === 123) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+
+      // Ctrl+Shift+I / J / C / K / M / S
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey) {
+        const blocked = ['I', 'J', 'C', 'K', 'M', 'S', 'i', 'j', 'c', 'k', 'm', 's'];
+        if (blocked.includes(key)) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      }
+
+      // Ctrl+U
+      if ((e.ctrlKey || e.metaKey) && (key === 'U' || key === 'u' || key === 85)) {
+        e.preventDefault();
+        return false;
+      }
+    }, true);
+
+    // ===== 2. 禁用右键菜单 =====
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      return false;
+    }, true);
+
+    // ===== 3. 检测开发者工具 =====
+    function detectDevTools() {
+      const threshold = 200;
+
+      // 窗口大小
+      const wDiff = window.outerWidth - window.innerWidth;
+      const hDiff = window.outerHeight - window.innerHeight;
+      const sizeCheck = wDiff > threshold || hDiff > threshold;
+
+      // console 陷阱
+      let consoleCheck = false;
+      try {
+        const fn = function() {};
+        fn.toString = function() { consoleCheck = true; return ''; };
+        console.log('%c', fn);
+      } catch(e) {}
+
+      // debugger 性能
+      const start = performance.now();
+      debugger;
+      const end = performance.now();
+      const debugCheck = (end - start) > 100;
+
+      // 综合判断
+      const checks = [sizeCheck, consoleCheck, debugCheck];
+      return checks.filter(Boolean).length >= 2;
+    }
+
+    // 清空页面
+    function clearPage() {
+      if (triggered) return;
+      triggered = true;
+      document.documentElement.innerHTML = '';
+      document.body.style.cssText = 'margin:0;padding:0;background:#1a1a1a;';
+    }
+
+    // 定时检测
+    let count = 0;
+    setInterval(function() {
+      if (detectDevTools()) {
+        count++;
+        if (count >= 2) clearPage();
+      } else {
+        count = 0;
+      }
+    }, 1000);
+
+  })();
+</script>
