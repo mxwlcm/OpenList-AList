@@ -16,28 +16,30 @@
 ### 二维码获取密码弹窗
 ![二维码弹窗](assets/二维码.jpg)
 
+### 底部备案信息
+![底部备案](assets/底部.jpg)
+
 - 🎀 粉红色主题密码弹窗
 - 💖 居中高亮标题
 - 🔗 可点击的网盘链接
 - 📢 客服信息提示
 - 🔒 密码输入验证
 - 📱 点击「获取密码」弹出二维码窗口
+- 📋 底部 ICP + 公安备案信息替换
 
 ---
 
 ## 🚀 快速使用
 
-### 1. 复制代码
+### 1. 密码弹窗
 
-把 `openlist-password-popup.html` 文件里的**全部内容**复制下来。
+把 `openlist-password-popup.html` 文件里的**全部内容**复制，粘贴到 OpenList 后台「**设置 → 全局 → 自定义头部**」。
 
-### 2. 粘贴到 OpenList 后台
+### 2. 底部备案信息（可选）
 
-1. 登录你的 OpenList 管理后台：`你的域名/@manage`
-2. 进入 **设置 → 全局**
-3. 找到 **自定义头部**（customize_head）文本框
-4. 把代码全部粘贴进去
-5. 点击保存
+把 `openlist-custom-footer.html` 文件里的**全部内容**复制，同样粘贴到「**设置 → 全局 → 自定义头部**」。
+
+> 可以同时粘贴密码弹窗和底部备案的代码，它们互不冲突。
 
 ### 3. 刷新页面
 
@@ -47,7 +49,9 @@
 
 ## ⚙️ 必改配置
 
-在代码的配置区找到以下项并修改：
+### 密码弹窗
+
+在 `openlist-password-popup.html` 的配置区修改：
 
 ```javascript
 const CONFIG = {
@@ -64,11 +68,31 @@ const CONFIG = {
 
 > ⚠️ **不修改密码的话，任何人输入 `mxwlcm` 都能进入！**
 
+### 底部备案
+
+在 `openlist-custom-footer.html` 的配置区修改：
+
+```javascript
+const FOOTER_CONFIG = {
+  // ICP 备案号（没有则留空字符串 ""）
+  ICP_NUMBER: "京ICP备XXXXXXXX号-1",
+
+  // ICP 备案图标链接（可选）
+  ICP_ICON: "",
+
+  // 公安备案号（没有则留空字符串 ""）
+  GONGAN_NUMBER: "京公网安备XXXXXXXXXXXXXX号",
+
+  // 公安备案图标链接（可选）
+  GONGAN_ICON: ""
+};
+```
+
 ---
 
 ## 🎨 自定义内容
 
-以下位置都可以自由修改：
+### 密码弹窗
 
 | 位置 | 说明 |
 |------|------|
@@ -78,6 +102,15 @@ const CONFIG = {
 | 客服微信/QQ | `.pwd-tip` 中的联系方式 |
 | 公众号名称 | `.pwd-sub-text` 和 `.qr-gzh-text` 中的名称 |
 | 操作步骤 | `.qr-steps` 中的步骤说明 |
+
+### 底部备案
+
+| 位置 | 说明 |
+|------|------|
+| ICP 备案号 | `ICP_NUMBER` 配置项 |
+| ICP 图标 | `ICP_ICON` 配置项（可选） |
+| 公安备案号 | `GONGAN_NUMBER` 配置项 |
+| 公安备案图标 | `GONGAN_ICON` 配置项（可选） |
 
 ---
 
@@ -96,17 +129,28 @@ const CONFIG = {
 ### 显示/隐藏密码
 - 输入框右侧有眼睛图标，可切换明文/密文显示
 
+### 底部备案替换
+- 保留原生 `.footer` 的 DOM 位置，不遮挡页面内容
+- 第一行：ICP 备案 | 公安备案（图标 + 文字）
+- 第二行：由 OpenList 驱动 | 管理后台
+- 两行以 `|` 分隔符为中心垂直对齐
+- SPA 路由切换时自动保持替换效果
+
 ---
 
 ## 📁 项目结构
 
 ```
 .
-├── openlist-password-popup.html   # 核心代码（复制此文件内容到后台）
+├── openlist-password-popup.html   # 密码弹窗代码（粘贴到自定义头部）
+├── openlist-custom-footer.html    # 底部备案代码（粘贴到自定义头部）
 ├── assets/
 │   ├── 密码.jpg                    # 密码弹窗预览图
-│   └── 二维码.jpg                  # 二维码弹窗预览图
+│   ├── 二维码.jpg                  # 二维码弹窗预览图
+│   └── 底部.jpg                    # 底部备案预览图
 ├── README.md                      # 本文件
+├── .gitignore                     # Git 忽略规则
+└── LICENSE                        # MIT 许可证
 ```
 
 ---
