@@ -1,0 +1,115 @@
+<!--
+  OpenList / AList 页面点击效果 — 爱国红色爱心+文字版
+
+  使用方式：
+  把下面全部代码粘贴到 OpenList 后台「设置 → 全局 → 自定义头部」
+
+  效果：
+  - 在页面任意位置点击，会出现红色爱心 + 爱国文字飘浮动画
+  - 随机大小、随机飘动方向、随机文字内容
+  - 自动消失，不影响页面操作
+-->
+<style>
+  /* 点击产生的元素 */
+  .click-effect-item {
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999;
+    animation: effectFloat 2.5s ease-out forwards;
+    font-weight: bold;
+    text-shadow: 0 0 8px rgba(222, 41, 16, 0.5);
+    white-space: nowrap;
+  }
+
+  @keyframes effectFloat {
+    0% {
+      transform: translate(-50%, -50%) scale(0.3);
+      opacity: 0;
+    }
+    10% {
+      transform: translate(-50%, -50%) scale(1.1);
+      opacity: 1;
+    }
+    20% {
+      transform: translate(-50%, -70%) scale(1);
+      opacity: 1;
+    }
+    70% {
+      transform: translate(-50%, -150%) scale(0.85);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translate(-50%, -120%) scale(0.6);
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    // 爱国文字库（爱心 + 文字混合）
+    const patrioticTexts = [
+      '❤️', '💖', '💗', '💓', '💕', '❣️',
+      '我爱中国', '祖国万岁', '中国加油',
+      '🇨🇳', '强国有我', '盛世中华',
+      '不忘初心', '牢记使命', '砥砺前行',
+      '厉害了我的国', '中国梦', '繁荣昌盛',
+      '山河无恙', '国泰民安', '爱我中华'
+    ];
+
+    // 随机数
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    // 创建飘浮元素
+    function createFloatItem(x, y) {
+      const item = document.createElement('span');
+      item.className = 'click-effect-item';
+
+      // 随机内容
+      const text = patrioticTexts[Math.floor(Math.random() * patrioticTexts.length)];
+      item.textContent = text;
+
+      // 判断是文字还是表情
+      const isEmoji = /[\u{1F300}-\u{1F9FF}]/u.test(text);
+
+      if (isEmoji) {
+        // 爱心/国旗：较大
+        item.style.fontSize = Math.floor(random(20, 36)) + 'px';
+      } else {
+        // 文字：红色
+        item.style.fontSize = Math.floor(random(14, 22)) + 'px';
+        item.style.color = '#de2910';
+      }
+
+      // 位置
+      item.style.left = x + 'px';
+      item.style.top = y + 'px';
+
+      // 随机动画时长（放慢，让文字看得清）
+      const duration = random(2, 3.5);
+      item.style.animationDuration = duration + 's';
+
+      document.body.appendChild(item);
+
+      // 动画结束移除
+      setTimeout(() => {
+        item.remove();
+      }, duration * 1000);
+    }
+
+    // 点击事件
+    document.addEventListener('click', function(e) {
+      // 创建 2-4 个元素
+      const count = Math.floor(random(2, 5));
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const offsetX = random(-20, 20);
+          const offsetY = random(-20, 20);
+          createFloatItem(e.clientX + offsetX, e.clientY + offsetY);
+        }, i * 100);
+      }
+    });
+  })();
+</script>
